@@ -60,10 +60,8 @@ export function LoveJourney() {
           >
             {scene === "envelope" ? (
               <EnvelopeScene
-                onOpen={() => {
-                  if (!music.on) music.toggle();
-                  go("spark");
-                }}
+                onPrime={music.start}
+                onOpen={() => go("spark")}
               />
             ) : null}
             {scene === "spark" ? (

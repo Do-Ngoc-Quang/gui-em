@@ -4,10 +4,21 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { confession } from "@/content/confession";
 
-export function EnvelopeScene({ onOpen }: { onOpen: () => void }) {
+export function EnvelopeScene({
+  onPrime,
+  onOpen,
+}: {
+  onPrime: () => void;
+  onOpen: () => void;
+}) {
   const [opening, setOpening] = useState(false);
 
+  const prime = () => {
+    onPrime();
+  };
+
   const open = () => {
+    prime();
     if (opening) return;
     setOpening(true);
     window.setTimeout(onOpen, 1100);
@@ -24,6 +35,7 @@ export function EnvelopeScene({ onOpen }: { onOpen: () => void }) {
 
       <motion.button
         type="button"
+        onPointerDown={prime}
         onClick={open}
         className={`relative mt-14 w-[280px] cursor-pointer sm:w-[340px] ${opening ? "" : "animate-floaty"}`}
         animate={opening ? { y: -8, scale: 1.04 } : { y: 0, scale: 1 }}

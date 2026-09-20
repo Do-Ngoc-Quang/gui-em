@@ -7,6 +7,8 @@ import { confession } from "@/content/confession";
 type YTPlayer = {
   playVideo: () => void;
   pauseVideo: () => void;
+  mute: () => void;
+  unMute: () => void;
   setVolume: (volume: number) => void;
 };
 
@@ -47,10 +49,19 @@ function whenYouTubeReady(callback: () => void) {
   };
 }
 
+function kickPlay(player: YTPlayer | null) {
+  if (!player) return;
+  player.unMute();
+  player.setVolume(confession.music.volume);
+  player.playVideo();
+  player.playVideo();
+}
+
 export function useAmbientMusic() {
   const [on, setOn] = useState(false);
   const onRef = useRef(false);
   const playerRef = useRef<YTPlayer | null>(null);
+  const pendingStart = useRef(false);
 
   onRef.current = on;
 
@@ -71,13 +82,15 @@ export function useAmbientMusic() {
           playsinline: 1,
           loop: 1,
           playlist: confession.music.youtubeId,
-          origin: window.location.origin,
+          origin: typeof window !== "undefined" ? window.location.origin : "",
         },
         events: {
           onReady: (event) => {
             event.target.setVolume(confession.music.volume);
             playerRef.current = event.target;
-            if (onRef.current) event.target.playVideo();
+            if (pendingStart.current || onRef.current) {
+              kickPlay(event.target);
+            }
           },
           onError: () => {
             playerRef.current = null;
@@ -90,26 +103,28 @@ export function useAmbientMusic() {
     };
   }, []);
 
-  useEffect(() => {
-    const player = playerRef.current;
-    if (!player) return;
-    if (on) player.playVideo();
-    else player.pauseVideo();
-  }, [on]);
+  const start = () => {
+    pendingStart.current = true;
+    onRef.current = true;
+    setOn(true);
+    kickPlay(playerRef.current);
+  };
+
+  const stop = () => {
+    pendingStart.current = false;
+    onRef.current = false;
+    setOn(false);
+    playerRef.current?.pauseVideo();
+  };
 
   return {
     on,
     title: confession.music.title,
     artist: confession.music.artist,
+    start,
     toggle: () => {
-      const next = !onRef.current;
-      onRef.current = next;
-      setOn(next);
-      const player = playerRef.current;
-      if (player) {
-        if (next) player.playVideo();
-        else player.pauseVideo();
-      }
+      if (onRef.current) stop();
+      else start();
     },
   };
 }
@@ -126,6 +141,7 @@ export function MusicToggle({
   artist: string;
 }) {
   const [showVideo, setShowVideo] = useState(false);
+  const touchHandled = useRef(false);
 
   useEffect(() => {
     if (!on) setShowVideo(false);
@@ -141,7 +157,7 @@ export function MusicToggle({
         className={
           videoOnScreen
             ? "pointer-events-auto absolute right-4 bottom-20 overflow-hidden rounded-xl bg-black shadow-lg shadow-rose-hot/20"
-            : "pointer-events-none absolute top-0 -left-[9999px]"
+            : "pointer-events-none absolute bottom-4 left-4 h-[112px] w-[200px] overflow-hidden opacity-[0.02]"
         }
       >
         <div id={PLAYER_ID} className="h-[112px] w-[200px]" />
@@ -159,7 +175,18 @@ export function MusicToggle({
       <div className="pointer-events-auto absolute bottom-4 left-4 flex items-center gap-2">
         <button
           type="button"
-          onClick={onToggle}
+          onPointerDown={(event) => {
+            if (event.pointerType === "mouse") return;
+            touchHandled.current = true;
+            onToggle();
+          }}
+          onClick={() => {
+            if (touchHandled.current) {
+              touchHandled.current = false;
+              return;
+            }
+            onToggle();
+          }}
           className="flex max-w-[200px] items-center gap-2 rounded-full bg-white/90 px-3 py-2.5 text-rose-ink shadow-lg shadow-rose-hot/15 backdrop-blur"
           aria-label={on ? "Tắt nhạc" : "Bật nhạc"}
         >
