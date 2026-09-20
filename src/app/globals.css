@@ -1,26 +1,138 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --blush: #fff1f5;
+  --blush-deep: #ffe4ee;
+  --rose: #fb7185;
+  --rose-hot: #f43f5e;
+  --rose-ink: #9f1239;
+  --petal: #fda4af;
+  --gold: #e8b4a0;
+  --cream: #fff7f9;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+  --color-blush: var(--blush);
+  --color-blush-deep: var(--blush-deep);
+  --color-rose: var(--rose);
+  --color-rose-hot: var(--rose-hot);
+  --color-rose-ink: var(--rose-ink);
+  --color-petal: var(--petal);
+  --color-gold: var(--gold);
+  --color-cream: var(--cream);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--blush);
+  color: var(--rose-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+.font-serif {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.scene-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.paper {
+  background:
+    radial-gradient(1200px 400px at 20% -10%, rgba(255, 255, 255, 0.7), transparent 50%),
+    linear-gradient(180deg, rgba(255, 247, 249, 0.96), rgba(255, 228, 238, 0.92));
+  box-shadow:
+    0 20px 60px rgba(190, 24, 93, 0.12),
+    0 2px 0 rgba(255, 255, 255, 0.7) inset;
+}
+
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-8deg) translateY(0);
+  }
+  50% {
+    transform: rotate(10deg) translateY(8px);
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(18px, 110vh, 0) rotate(280deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(1.12);
+  }
+  32% {
+    transform: scale(1);
+  }
+  48% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-floaty {
+  animation: floaty 4.2s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.4s ease-in-out infinite;
+}
+
+.falling-piece {
+  animation-name: fall, sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-floaty,
+  .animate-heartbeat,
+  .falling-piece {
+    animation: none;
+  }
 }

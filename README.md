@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gửi Em
 
-## Getting Started
+Một app Next.js hoạt họa màu hồng, dùng để **thay lời tỏ tình**.
 
-First, run the development server:
+Người nhận mở một phong bì sáp hồng, rồi đi qua bảy cảnh: kỷ niệm, chòm sao lý do, trò chơi nút “Không” chạy trốn, bức thư đánh máy, câu hỏi lớn, và màn chúc mừng.
+
+## Chạy app
 
 ```bash
+cd gui-em
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000). Đưa điện thoại hoặc laptop cho người ấy, rồi để họ tự chạm vào dấu sáp.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Viết lại cho đúng chuyện của hai bạn
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Sửa file `src/content/confession.ts`:
 
-## Learn More
+- `from` / `to`: Anh–Em, hoặc tên thật
+- `spark.memories`: ba kỷ niệm
+- `stars.reasons`: sáu lý do
+- `letter.body`: lời tỏ tình
+- `question.prompt`: câu hỏi cuối
 
-To learn more about Next.js, take a look at the following resources:
+## Nhạc nền
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Bài đang gắn: **Ăm Chã Húi — Lâm Thằn Lằn**, phát **online** từ MV chính thức trên YouTube khi mở phong bì. Player nhỏ góc trái vẫn hiện (YouTube yêu cầu nhìn thấy được).
